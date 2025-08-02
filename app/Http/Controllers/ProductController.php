@@ -72,8 +72,22 @@ class ProductController extends Controller
             'file' => 'required|mimes:xlsx,xls'
         ]);
 
-        Excel::import(new ProductsImport, $request->file('file'));
-        return redirect()->route('products.index')->with('success', 'Productos importados correctamente.');
+        try {
+            $import = new ProductsImport();
+            $file = $request->file('file');
+
+            // Validar encabezados antes de importar
+            $headings = \Maatwebsite\Excel\Facades\Excel::toArray($import, $file)[0][0] ?? [];
+            $import->validateHeaders(array_keys($headings));
+
+            // Importar datos
+            \Maatwebsite\Excel\Facades\Excel::import($import, $file);
+
+            return redirect()->route('products.index')->with('success', 'Productos importados correctamente.');
+        } catch (\Exception $e) {
+            // Redirigir con error en sesión
+            return redirect()->route('products.index')->with('import_error', $e->getMessage());
+        }
     }
 }
 

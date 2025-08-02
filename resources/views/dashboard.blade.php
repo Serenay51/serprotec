@@ -16,7 +16,7 @@
                 <h2 class="text-success">{{ number_format($monthSalesCount) }}</h2>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card shadow-sm text-center p-3">
                 <h5 class="text-muted">Balance del mes</h5>
                 <h2 class="text-success">${{ number_format($monthSales - $monthCosts, 2) }}</h2>
@@ -81,6 +81,14 @@
         </div>
     </div>
 
+    <!-- Total Ventas 
+    <div class="mt-5 col-md-2">
+        <div class="card shadow-sm text-center p-3">
+            <h5 class="text-muted">Total Ventas</h5>
+            <h2>${{ number_format($totalSales) }}</h2>
+        </div>
+    </div>-->
+
     <!-- Total Productos -->
     <div class="mt-5 col-md-2">
         <div class="card shadow-sm text-center p-3">
@@ -97,7 +105,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- Ventas recientes -->
 <div class="card shadow-sm mb-4">

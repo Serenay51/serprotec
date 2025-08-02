@@ -22,6 +22,19 @@
     <small class="text-muted mt-2">Formato: columnas (name, email, phone, address, cuit)</small>
 </div>
 
+@if(session('import_error'))
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error en el archivo',
+        text: "{{ session('import_error') }}",
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#d33'
+    });
+</script>
+@endif
+
 <table class="table table-bordered bg-white shadow-sm">
     <thead class="table-light text-center">
         <tr>

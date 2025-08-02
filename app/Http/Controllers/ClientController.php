@@ -67,7 +67,21 @@ class ClientController extends Controller
             'file' => 'required|mimes:xlsx,xls'
         ]);
 
-        Excel::import(new ClientsImport, $request->file('file'));
-        return redirect()->route('clients.index')->with('success', 'Clientes importados correctamente.');
+        try {
+            $import = new ClientsImport();
+            $file = $request->file('file');
+
+            // Validar encabezados antes de importar
+            $headings = Excel::toArray($import, $file)[0][0] ?? [];
+            $import->validateHeaders(array_keys($headings));
+
+            // Importar archivo
+            Excel::import($import, $file);
+
+            return redirect()->route('clients.index')->with('success', 'Clientes importados correctamente.');
+        } catch (\Exception $e) {
+            // Si hubo error (columnas faltantes o datos vacíos), redirigir con mensaje de error
+            return redirect()->route('clients.index')->with('import_error', $e->getMessage());
+        }
     }
 }

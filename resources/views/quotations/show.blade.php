@@ -4,7 +4,7 @@
 <div class="container">
     <h1>Presupuesto #{{ $quotation->number }}</h1>
     <p><strong>Cliente:</strong> {{ $quotation->client->name }}</p>
-    <p><strong>Fecha:</strong> {{ $quotation->date }}</p>
+    <p><strong>Fecha:</strong> {{ $quotation->date->format('d/m/Y') }}</p>
     <p><strong>Total:</strong> ${{ number_format($quotation->total, 2) }}</p>
 
     <h3>Detalles</h3>
