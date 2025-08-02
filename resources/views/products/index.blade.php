@@ -23,16 +23,16 @@
 </div>
 
 <table class="table table-bordered bg-white shadow-sm">
-    <thead class="table-light">
+    <thead class="table-light text-center">
         <tr>
-            <th>#</th>
+            <th>N° Producto</th>
             <th>Nombre</th>
             <th>Precio</th>
             <th>Stock</th>
             <th>Acciones</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="text-center">
     @foreach($products as $product)
         <tr>
             <td>{{ $product->id }}</td>

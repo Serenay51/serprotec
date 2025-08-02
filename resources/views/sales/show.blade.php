@@ -8,7 +8,7 @@
     <p><strong>Email:</strong> {{ $sale->client->email }}</p>
     <p><strong>Dirección:</strong> {{ $sale->client->address }}</p>
     <br>
-    <p><strong>Fecha:</strong> {{ $sale->date }}</p>
+    <p><strong>Fecha:</strong> {{ $sale->date->format('d/m/Y') }}</p>
     <p><strong>Total:</strong> ${{ number_format($sale->total, 2) }}</p>
 
     <h3>Detalles</h3>

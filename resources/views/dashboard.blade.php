@@ -13,7 +13,7 @@
         <div class="col-md-6">
             <div class="card shadow-sm text-center p-3">
                 <h5 class="text-muted">Ventas del mes</h5>
-                <h2 class="text-success">${{ number_format($monthSales, 2) }}</h2>
+                <h2 class="text-success">{{ number_format($monthSalesCount) }}</h2>
             </div>
         </div>
         <div class="col-md-4">
@@ -35,7 +35,7 @@
                         datasets: [
                             {
                                 label: 'Ventas',
-                                data: [{{ $lastMonthSales }}, {{ $monthSales }}],
+                                data: [{{ $lastMonthSalesCount }}, {{ $monthSalesCount }}],
                                 backgroundColor: [
                                     'rgba(54, 162, 235, 0.2)',
                                     'rgba(75, 192, 192, 0.2)'
@@ -134,18 +134,17 @@
     </div>
 </div>
 
-<!-- Vencimientos del día -->
-
+<!-- Vencimientos del mes -->
 <div class="card shadow-sm">
     <div class="card-header bg-light">
-        <h5 class="mb-0">Vencimientos de hoy</h5>
+        <h5 class="mb-0">Vencimientos del mes</h5>
     </div>
     <div class="card-body">
-        @if($vencimientos->isEmpty())
-            <p class="text-muted mb-0">No hay vencimientos.</p>
+        @if($vencimientosPaginated->isEmpty())
+            <p class="text-muted mb-0">No hay vencimientos este mes.</p>
         @else
             <ul class="list-group">
-                @foreach($vencimientos as $prod)
+                @foreach($vencimientosPaginated as $prod)
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
                             <span class="fw-bold">{{ $prod->name }}</span>
@@ -156,8 +155,15 @@
                             <br>
                             <small class="text-muted">Teléfono: {{ $prod->client_phone }}</small>
                             <br>
+                            <small class="text-muted">Vencimiento:</small>
+                            @if($prod->days_left == 0)
+                                <span class="badge bg-danger">Hoy</span>
+                            @elseif($prod->days_left == 1)
+                                <span class="badge bg-warning">Mañana</span>
+                            @else
+                                <span class="badge bg-success">{{ $prod->vencimiento->format('d/m/Y') }}</span>
+                            @endif
                         </div>
-                        
                         <div>
                             <a href="{{ route('sales.show', $prod->sale_id) }}" class="btn btn-sm btn-primary">
                                 Ver venta
@@ -169,6 +175,11 @@
                     </li>
                 @endforeach
             </ul>
+
+            <!-- Links de paginación -->
+            <div class="mt-3">
+                {{ $vencimientosPaginated->links() }}
+            </div>
         @endif
     </div>
 </div>

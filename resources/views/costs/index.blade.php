@@ -11,7 +11,7 @@
 @endif
 
 <table class="table table-bordered bg-white shadow-sm">
-    <thead class="table-light">
+    <thead class="table-light text-center">
         <tr>
             <th>Proveedor</th>
             <th>Archivo</th>
@@ -19,7 +19,7 @@
             <th>Acciones</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="text-center">
         @forelse($costs as $c)
         <tr>
             <td>{{ $c->provider->name }}</td>

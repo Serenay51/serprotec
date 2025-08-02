@@ -11,7 +11,7 @@
 @endif
 
 <table class="table table-bordered bg-white shadow-sm">
-    <thead class="table-light">
+    <thead class="table-light text-center">
         <tr>
             <th>N° Presupuesto</th>
             <th>Cliente</th>
@@ -20,7 +20,7 @@
             <th>Acciones</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="text-center">
         @forelse($quotations as $q)
         <tr>
             <td>{{ $q->number }}</td>
