@@ -60,9 +60,10 @@
                     @csrf @method('DELETE')
                     <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                 </form>
-                <a href="https://api.whatsapp.com/send?phone={{ $client->phone }}" class="btn btn-sm btn-success" target="_blank">
+                <button class="btn btn-sm btn-success" 
+                        onclick="openWhatsAppModal('{{ $client->name }}', '{{ $client->phone }}')">
                     <i class="fa-brands fa-whatsapp"></i>
-                </a>
+                </button>
             </td>
         </tr>
         @empty
@@ -72,4 +73,46 @@
 </table>
 
 {{ $clients->links() }}
+
+<!-- Modal WhatsApp -->
+<div class="modal fade" id="whatsappModal" tabindex="-1" aria-labelledby="whatsappModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content shadow-lg">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="whatsappModalLabel"><i class="fa-brands fa-whatsapp"></i> Enviar mensaje</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="mb-2">Vas a enviar un mensaje a:</p>
+        <h5 id="clientName" class="fw-bold"></h5>
+        <p><i class="fa fa-phone"></i> <span id="clientPhone"></span></p>
+        <textarea id="whatsappMessage" class="form-control mt-3" rows="2" placeholder="Escribe un mensaje..."></textarea>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <a id="whatsappLink" href="#" target="_blank" class="btn btn-success">
+            <i class="fa-brands fa-whatsapp"></i> Abrir en WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+    function openWhatsAppModal(name, phone) {
+        document.getElementById('clientName').innerText = name;
+        document.getElementById('clientPhone').innerText = phone;
+        document.getElementById('whatsappLink').href = `https://api.whatsapp.com/send?phone=${phone}`;
+        new bootstrap.Modal(document.getElementById('whatsappModal')).show();
+    }
+
+    // Actualiza el enlace con el mensaje escrito
+    document.getElementById('whatsappMessage').addEventListener('input', function() {
+        const phone = document.getElementById('clientPhone').innerText;
+        const message = encodeURIComponent(this.value);
+        document.getElementById('whatsappLink').href = `https://api.whatsapp.com/send?phone=${phone}&text=${message}`;
+    });
+</script>
 @endsection
