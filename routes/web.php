@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('costs', CostController::class)->except(['show','edit','update']);
     Route::get('costs/{cost}/download', [CostController::class, 'download'])->name('costs.download');
+    Route::get('/costs/{cost}/preview', [CostController::class, 'preview'])->name('costs.preview');
+
 
     Route::resource('providers', ProviderController::class)->except(['show']);
 });

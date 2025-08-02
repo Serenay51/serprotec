@@ -52,4 +52,17 @@ class CostController extends Controller
         $file = Storage::disk('public')->path($cost->file); 
         return response()->download($file, $cost->filename);
     }
+
+    public function preview(Cost $cost)
+    {
+        // Como guardás en "public", hay que apuntar al disco correcto
+        $filePath = storage_path('app/public/' . $cost->file); 
+
+        if (!file_exists($filePath)) {
+            abort(404, 'Archivo no encontrado.');
+        }
+
+        return response()->file($filePath);
+    }
+
 }
