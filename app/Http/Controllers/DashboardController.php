@@ -10,6 +10,7 @@ use App\Models\Provider;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -105,6 +106,49 @@ class DashboardController extends Controller
         // Balance clientes del mes actual
         $monthClients = Client::whereMonth('created_at', now()->month)->count();
 
+        // 🏆 Top productos vendidos (ranking)
+        $topProducts = DB::table('sale_items')
+            ->join('products', 'sale_items.product_id', '=', 'products.id')
+            ->select('products.name', DB::raw('SUM(sale_items.quantity) as total_sold'))
+            ->groupBy('products.name')
+            ->orderByDesc('total_sold')
+            ->limit(5)
+            ->get();
+
+        // 🏅 Logros desbloqueables
+        $achievements = [
+            [
+                'title' => '🔥 10 ventas en el mes',
+                'unlocked' => $monthSales >= 10,
+                'desc' => 'Alcanzaste 10 ventas este mes.'
+            ],
+            [
+                'title' => '🎯 Meta de $100.000 en ventas',
+                'unlocked' => $monthSales >= 100000,
+                'desc' => 'Superaste la meta de facturación mensual.'
+            ],
+            [
+                'title' => '🤝 5 clientes nuevos',
+                'unlocked' => $monthClients >= 5,
+                'desc' => 'Conseguiste 5 clientes nuevos este mes.'
+            ],
+            [
+                'title' => '📦 20 productos vendidos',
+                'unlocked' => $monthSalesCount >= 20,
+                'desc' => 'Alcanzaste 20 productos vendidos este mes.'
+            ],
+            [
+                'title' => '📈 Crecimiento del 50% en ventas',
+                'unlocked' => $lastMonthSales > 0 && ($monthSales / $lastMonthSales) >= 1.5,
+                'desc' => 'Tus ventas crecieron un 50% respecto al mes pasado.'
+            ],
+            [
+                'title' => '🌟 Top vendedor del mes',
+                'unlocked' => $monthSalesCount >= 30,
+                'desc' => 'Eres el top vendedor del mes con más de 30 ventas.'
+            ],
+        ];
+
         return view('dashboard', compact(
             'monthSales',
             'monthCosts',
@@ -118,7 +162,9 @@ class DashboardController extends Controller
             'monthClients',
             'lastMonthSalesCount',
             'monthSalesCount',
-            'totalSales'
+            'totalSales',
+            'topProducts',
+            'achievements'
         ));
     }
 }

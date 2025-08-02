@@ -17,6 +17,10 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <!-- Canvas Confetti for achievements -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -64,7 +68,7 @@
                 <div class="container-fluid d-flex justify-content-between">
                     <img src="/images/logo.png" alt="Logo" width="120">
                     <div>
-                        <span class="me-3"><i class="fa fa-user"></i> {{ auth()->user()->name }}</span>
+                        <span class="me-3"><i class="fa fa-user-circle"></i> {{ auth()->user()->name }}</span>
                         <form action="{{ route('logout') }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</button>

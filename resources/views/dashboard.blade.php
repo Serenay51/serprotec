@@ -107,6 +107,169 @@
     </div>
 </div>
 
+
+<!-- Ranking de productos -->
+<div class="card shadow-sm mt-4 mb-4">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">🏆 Top productos vendidos</h5>
+    </div>
+    <div class="card-body text-center">
+        @if($topProducts->isEmpty())
+            <p class="text-muted">Aún no hay datos suficientes.</p>
+        @else
+            <div class="d-flex justify-content-center align-items-end" style="gap: 20px;">
+                @foreach($topProducts as $index => $product)
+                    <div class="text-center" style="flex:1;">
+                        <div style="
+                            background: {{ $index==0 ? '#FFD700' : ($index==1 ? '#C0C0C0' : ($index==2 ? '#CD7F32' : '#e9ecef')) }};
+                            height: {{ 120 - ($index * 20) }}px;
+                            width: 80px;
+                            margin: 0 auto;
+                            border-radius: 8px;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            color:#000;
+                            font-weight:bold;"
+                            class="{{ $index == 0 ? 'aura-brillo-oro' : ($index == 1 ? 'aura-brillo-plata' : ($index == 2 ? 'aura-brillo-bronce' : '')) }}">
+                            {{ $product->total_sold }}
+                        </div>
+                        <small class="d-block mt-2">{{ $product->name }}</small>
+                        @if($index == 0) 🥇 @elseif($index == 1) 🥈 @elseif($index == 2) 🥉 @endif
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
+</div>
+
+<style>
+@keyframes brilloOro {
+  0%, 100% {
+    box-shadow:
+      0 0 8px 2px #FFD700,
+      0 0 15px 5px #FFD700cc,
+      0 0 25px 10px #FFD70099;
+  }
+  50% {
+    box-shadow:
+      0 0 12px 4px #FFD700ff,
+      0 0 25px 12px #FFD700dd,
+      0 0 35px 15px #FFD700cc;
+  }
+}
+
+@keyframes brilloPlata {
+  0%, 100% {
+    box-shadow:
+      0 0 8px 2px #C0C0C0,
+      0 0 15px 5px #C0C0C0cc,
+      0 0 25px 10px #C0C0C099;
+  }
+  50% {
+    box-shadow:
+      0 0 12px 4px #C0C0C0ff,
+      0 0 25px 12px #C0C0C0dd,
+      0 0 35px 15px #C0C0C0cc;
+  }
+}
+
+@keyframes brilloBronce {
+  0%, 100% {
+    box-shadow:
+      0 0 8px 2px #CD7F32,
+      0 0 15px 5px #CD7F32cc,
+      0 0 25px 10px #CD7F3299;
+  }
+  50% {
+    box-shadow:
+      0 0 12px 4px #CD7F32ff,
+      0 0 25px 12px #CD7F32dd,
+      0 0 35px 15px #CD7F32cc;
+  }
+}
+
+.aura-brillo-oro {
+  animation: brilloOro 2.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+.aura-brillo-plata {
+  animation: brilloPlata 2.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+.aura-brillo-bronce {
+  animation: brilloBronce 2.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+</style>
+
+
+<!-- Logros desbloqueables -->
+@if(empty($achievements))
+    <div class="alert alert-info text-center">
+        <i class="fa fa-trophy"></i> ¡Desbloquea logros al usar el sistema!
+    </div>
+@endif
+<div class="card shadow-sm mt-4 mb-4">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">🏅 Logros desbloqueables</h5>
+    </div>
+    <div class="card-body d-flex flex-wrap gap-3">
+        @foreach($achievements as $index => $ach)
+            <div class="achievement-card p-3 text-center rounded"
+                data-unlocked="{{ $ach['unlocked'] ? '1' : '0' }}"
+                style="flex:1; min-width:150px;
+                       background: {{ $ach['unlocked'] ? '#d4edda' : '#f8f9fa' }};
+                       border: 2px dashed {{ $ach['unlocked'] ? '#28a745' : '#ccc' }};
+                       transition: transform 0.3s ease, box-shadow 0.3s ease; cursor:pointer;">
+                <div style="font-size:22px;">{{ $ach['title'] }}</div>
+                <small class="d-block mt-1 text-muted">{{ $ach['desc'] }}</small>
+                @if($ach['unlocked'])
+                    <span class="badge bg-success mt-2">Desbloqueado ✅</span>
+                @else
+                    <span class="badge bg-secondary mt-2">Bloqueado 🔒</span>
+                @endif
+            </div>
+        @endforeach
+    </div>
+</div>
+
+<style>
+    .achievement-card:hover {
+        transform: scale(1.08);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    }
+</style>
+
+<script>
+document.querySelectorAll('.achievement-card').forEach(card => {
+    card.addEventListener('click', () => {
+        if (card.dataset.unlocked === '1') {
+            // 🎉 Dispara confeti
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            // Opción extra: mostrar un mensaje divertido
+            Swal.fire({
+                title: '¡Felicidades! 🎉',
+                text: 'Logro desbloqueado: ' + card.querySelector('div').innerText,
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+    });
+});
+</script>
+
+
+
+
 <!-- Ventas recientes -->
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-light">
@@ -191,4 +354,9 @@
         @endif
     </div>
 </div>
+
+
+
 @endsection
+
+
