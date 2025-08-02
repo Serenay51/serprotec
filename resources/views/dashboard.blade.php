@@ -355,6 +355,204 @@ document.querySelectorAll('.achievement-card').forEach(card => {
     </div>
 </div>
 
+<!-- Botón oculto para activar el juego -->
+<button id="toggleGameBtn" style="position:fixed; bottom:20px; right:20px; z-index:1000; opacity:0.3; padding:10px 20px; border-radius:8px; background:#333; color:#fff; border:none; cursor:pointer;">
+    🚀
+</button>
+
+<!-- Modal para el juego -->
+<div id="gameModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.9); z-index:1050; justify-content:center; align-items:center;">
+    <canvas id="galagaCanvas" width="600" height="400" style="background:#000; border: 2px solid white;"></canvas>
+    <button id="closeGameBtn" style="position:absolute; top:20px; right:20px; padding:5px 10px;">Cerrar</button>
+</div>
+
+
+<script>
+const toggleBtn = document.getElementById('toggleGameBtn');
+const gameModal = document.getElementById('gameModal');
+const closeBtn = document.getElementById('closeGameBtn');
+const gameCanvas = document.getElementById('galagaCanvas');
+const gameCtx = gameCanvas.getContext('2d');
+
+let gameInterval;
+let keys = {};
+let player = { x: 280, y: 350, width: 40, height: 20, speed: 5, color: 'lime', bullets: [] };
+let enemies = [];
+let enemyRows = 3;
+let enemyCols = 8;
+let enemyWidth = 40;
+let enemyHeight = 20;
+let enemyPadding = 10;
+let enemyOffsetTop = 30;
+let enemyOffsetLeft = 30;
+let enemyDirection = 1;
+let enemySpeed = 1;
+let score = 0;
+let gameOver = false;
+
+function createEnemies() {
+    enemies = [];
+    for(let r=0; r<enemyRows; r++) {
+        for(let c=0; c<enemyCols; c++) {
+            enemies.push({
+                x: enemyOffsetLeft + c * (enemyWidth + enemyPadding),
+                y: enemyOffsetTop + r * (enemyHeight + enemyPadding),
+                width: enemyWidth,
+                height: enemyHeight,
+                alive: true,
+                color: `hsl(${r*40}, 70%, 60%)`
+            });
+        }
+    }
+}
+
+function drawPlayer() {
+    gameCtx.fillStyle = player.color;
+    gameCtx.fillRect(player.x, player.y, player.width, player.height);
+}
+
+function drawEnemies() {
+    enemies.forEach(enemy => {
+        if(enemy.alive){
+            gameCtx.fillStyle = enemy.color;
+            gameCtx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+        }
+    });
+}
+
+function moveEnemies() {
+    let edgeReached = false;
+    enemies.forEach(enemy => {
+        if(enemy.alive) {
+            enemy.x += enemyDirection * enemySpeed;
+            if(enemy.x + enemy.width > gameCanvas.width || enemy.x < 0) {
+                edgeReached = true;
+            }
+        }
+    });
+    if(edgeReached) {
+        enemyDirection *= -1;
+        enemies.forEach(enemy => {
+            enemy.y += enemyHeight / 2;
+        });
+    }
+}
+
+function drawBullets() {
+    gameCtx.fillStyle = 'yellow';
+    player.bullets.forEach(bullet => {
+        gameCtx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+    });
+}
+
+function moveBullets() {
+    player.bullets.forEach((bullet, i) => {
+        bullet.y -= bullet.speed;
+        if(bullet.y < 0) {
+            player.bullets.splice(i, 1);
+        }
+    });
+}
+
+function checkCollisions() {
+    player.bullets.forEach((bullet, bIndex) => {
+        enemies.forEach(enemy => {
+            if(enemy.alive && bullet.x < enemy.x + enemy.width && bullet.x + bullet.width > enemy.x &&
+                bullet.y < enemy.y + enemy.height && bullet.y + bullet.height > enemy.y) {
+                    enemy.alive = false;
+                    player.bullets.splice(bIndex, 1);
+                    score += 10;
+            }
+        });
+    });
+}
+
+function drawScore() {
+    gameCtx.fillStyle = 'white';
+    gameCtx.font = '18px Arial';
+    gameCtx.fillText('Puntaje: ' + score, 10, 20);
+}
+
+function update() {
+    if(gameOver) return;
+    gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+    if(keys['ArrowLeft'] && player.x > 0) {
+        player.x -= player.speed;
+    }
+    if(keys['ArrowRight'] && player.x + player.width < gameCanvas.width) {
+        player.x += player.speed;
+    }
+
+    moveEnemies();
+    moveBullets();
+    checkCollisions();
+
+    drawPlayer();
+    drawEnemies();
+    drawBullets();
+    drawScore();
+
+    enemies.forEach(enemy => {
+        if(enemy.alive && enemy.y + enemy.height > player.y) {
+            gameOver = true;
+            alert('Game Over! Tu puntaje fue: ' + score);
+            closeGame();
+        }
+    });
+
+    if(enemies.every(e => !e.alive)) {
+        alert('¡Ganaste! Puntaje final: ' + score);
+        closeGame();
+    }
+}
+
+function shoot() {
+    if(player.bullets.length < 3) {
+        player.bullets.push({
+            x: player.x + player.width/2 - 2,
+            y: player.y,
+            width: 4,
+            height: 10,
+            speed: 7
+        });
+    }
+}
+
+function startGame() {
+    createEnemies();
+    score = 0;
+    gameOver = false;
+    player.x = 280;
+    player.bullets = [];
+    enemyDirection = 1;
+
+    gameInterval = setInterval(update, 30);
+}
+
+function closeGame() {
+    clearInterval(gameInterval);
+    gameModal.style.display = 'none';
+}
+
+window.addEventListener('keydown', e => {
+    keys[e.key] = true;
+    if(e.key === ' ' || e.key === 'Spacebar') {
+        shoot();
+        e.preventDefault();
+    }
+});
+window.addEventListener('keyup', e => {
+    keys[e.key] = false;
+});
+
+toggleBtn.addEventListener('click', () => {
+    gameModal.style.display = 'flex';
+    startGame();
+});
+closeBtn.addEventListener('click', closeGame);
+
+</script>
 
 
 @endsection
