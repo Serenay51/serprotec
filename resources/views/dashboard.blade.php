@@ -12,17 +12,35 @@
     <!-- Resumen de ventas -->
     <div class="row mb-4">
         <div class="col-md-6">
-            <div class="card shadow-sm text-center p-3">
+            <div class="card shadow-sm text-center p-3 zoom-card">
                 <h5 class="text-muted"><i class="fa fa-chart-line"></i> Ventas del mes</h5>
                 <h2 class="text-success">{{ number_format($monthSalesCount) }}</h2>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card shadow-sm text-center p-3">
+            <div id="balanceCard" class="card shadow-sm text-center p-3" style="cursor:pointer;">
                 <h5 class="text-muted"><i class="fa fa-balance-scale"></i> Balance del mes</h5>
                 <h2 class="text-success">${{ number_format($monthSales - $monthCosts, 2) }}</h2>
             </div>
         </div>
+
+<script>
+  const balanceCard = document.getElementById('balanceCard');
+
+  balanceCard.addEventListener('click', () => {
+    confetti({
+      particleCount: 1000,
+      spread: 1000,
+      origin: { y: 0.3, x: 0.75 },
+      gravity: 0.9,
+      shapes: ['rectangle'],
+      particleText: '💰',
+      scalar: 1.2,
+      ticks: 400,
+      colors: ['#4caf50', '#388e3c', '#2e7d32'], // verdes para dar ambiente billetes
+    });
+  });
+</script>
 
         <div class="mt-5 col-md-4">
             <canvas id="salesChart" width="200" height="200"></canvas>
@@ -76,7 +94,7 @@
 
     <!-- Total Clientes -->
     <div class="mt-5 col-md-2">
-        <div class="card shadow-sm text-center p-3">
+        <div class="card shadow-sm text-center p-3 zoom-card">
             <h5 class="text-muted"><i class="fa fa-users"></i> Clientes</h5>
             <h2>{{ $totalClients }}</h2>
         </div>
@@ -84,7 +102,7 @@
 
     <!-- Total Ventas 
     <div class="mt-5 col-md-2">
-        <div class="card shadow-sm text-center p-3">
+        <div class="card shadow-sm text-center p-3 zoom-card">
             <h5 class="text-muted">Total Ventas</h5>
             <h2>${{ number_format($totalSales) }}</h2>
         </div>
@@ -92,7 +110,7 @@
 
     <!-- Total Productos -->
     <div class="mt-5 col-md-2">
-        <div class="card shadow-sm text-center p-3">
+        <div class="card shadow-sm text-center p-3 zoom-card">
             <h5 class="text-muted"><i class="fa fa-box"></i> Productos</h5>
             <h2>{{ $totalProducts }}</h2>
         </div>
@@ -100,13 +118,26 @@
 
     <!-- Total Proveedores -->
     <div class="mt-5 col-md-2">
-        <div class="card shadow-sm text-center p-3">
+        <div class="card shadow-sm text-center p-3 zoom-card">
             <h5 class="text-muted"><i class="fa fa-truck"></i> Proveedores</h5>
             <h2>{{ $totalProviders }}</h2>
         </div>
     </div>
 </div>
 
+<style>
+  /* Zoom suave para las tarjetas de resumen */
+  .card.shadow-sm.text-center.p-3 {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+
+  .card.shadow-sm.text-center.p-3:hover {
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+</style>
 
 <!-- Ranking de productos -->
 <div class="card shadow-sm mt-4 mb-4">
@@ -553,6 +584,7 @@ toggleBtn.addEventListener('click', () => {
 closeBtn.addEventListener('click', closeGame);
 
 </script>
+
 
 
 @endsection
