@@ -3,7 +3,7 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h3>Productos</h3>
-    <a href="{{ route('products.create') }}" class="btn btn-success" style="background:#2A8D6C;">+ Nuevo Producto</a>
+    <a href="{{ route('products.create') }}" class="btn btn-success" style="background:#2A8D6C;"><i class="fa fa-box"></i> Nuevo Producto</a>
 </div>
 
 @if(session('success'))
@@ -53,12 +53,12 @@
             <td>${{ number_format($product->price, 2) }}</td>
             <td>{{ $product->stock }}</td>
             <td>
-                <a href="{{ route('products.edit', $product) }}" class="btn btn-primary btn-sm">Editar</a>
-                <a href="{{ route('products.show', $product) }}" class="btn btn-info btn-sm">Ver</a>
+                <a href="{{ route('products.edit', $product) }}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
+                <a href="{{ route('products.show', $product) }}" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>
                 <form id="delete-form-{{ $product->id }}" action="{{ route('products.destroy', $product) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $product->id }}, '{{ $product->name }}')">Eliminar</button>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $product->id }}, '{{ $product->name }}')"><i class="fa fa-trash"></i></button>
                     <script>
                         function confirmDelete(id, name) {
                             Swal.fire({

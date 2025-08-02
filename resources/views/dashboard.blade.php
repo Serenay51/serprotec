@@ -6,19 +6,20 @@
     <!-- Mensaje de bienvenida -->
     <div class="alert alert-info" role="alert"
         style="text-align: center; font-size: 1.2em; margin-top: 20px;">
+        <i class="fa fa-info-circle"></i>
         Bienvenido al panel de control. Aquí puedes ver un resumen de las ventas, clientes y productos.
     </div>
     <!-- Resumen de ventas -->
     <div class="row mb-4">
         <div class="col-md-6">
             <div class="card shadow-sm text-center p-3">
-                <h5 class="text-muted">Ventas del mes</h5>
+                <h5 class="text-muted"><i class="fa fa-chart-line"></i> Ventas del mes</h5>
                 <h2 class="text-success">{{ number_format($monthSalesCount) }}</h2>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card shadow-sm text-center p-3">
-                <h5 class="text-muted">Balance del mes</h5>
+                <h5 class="text-muted"><i class="fa fa-balance-scale"></i> Balance del mes</h5>
                 <h2 class="text-success">${{ number_format($monthSales - $monthCosts, 2) }}</h2>
             </div>
         </div>
@@ -76,7 +77,7 @@
     <!-- Total Clientes -->
     <div class="mt-5 col-md-2">
         <div class="card shadow-sm text-center p-3">
-            <h5 class="text-muted">Clientes</h5>
+            <h5 class="text-muted"><i class="fa fa-users"></i> Clientes</h5>
             <h2>{{ $totalClients }}</h2>
         </div>
     </div>
@@ -92,7 +93,7 @@
     <!-- Total Productos -->
     <div class="mt-5 col-md-2">
         <div class="card shadow-sm text-center p-3">
-            <h5 class="text-muted">Productos</h5>
+            <h5 class="text-muted"><i class="fa fa-box"></i> Productos</h5>
             <h2>{{ $totalProducts }}</h2>
         </div>
     </div>
@@ -100,7 +101,7 @@
     <!-- Total Proveedores -->
     <div class="mt-5 col-md-2">
         <div class="card shadow-sm text-center p-3">
-            <h5 class="text-muted">Proveedores</h5>
+            <h5 class="text-muted"><i class="fa fa-truck"></i> Proveedores</h5>
             <h2>{{ $totalProviders }}</h2>
         </div>
     </div>
@@ -112,7 +113,7 @@
         <h5 class="mb-0">Ventas recientes</h5>
     </div>
     <div class="card-body p-0">
-        <table class="table mb-0">
+        <table class="table mb-0 text-center">
             <thead class="table-light">
                 <tr>
                     <th>N° Venta</th>
@@ -122,7 +123,7 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="text-center">
                 @forelse($recentSales as $sale)
                 <tr>
                     <td>{{ $sale->number }}</td>
@@ -130,7 +131,7 @@
                     <td>{{ $sale->date->format('d/m/Y') }}</td>
                     <td>${{ number_format($sale->total, 2) }}</td>
                     <td>
-                        <a href="{{ route('sales.show', $sale) }}" class="btn btn-sm btn-primary">Ver</a>
+                        <a href="{{ route('sales.show', $sale) }}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                     </td>
                 </tr>
                 @empty
@@ -173,7 +174,7 @@
                         </div>
                         <div>
                             <a href="{{ route('sales.show', $prod->sale_id) }}" class="btn btn-sm btn-primary">
-                                Ver venta
+                                <i class="fa fa-eye"></i>
                             </a>
                             <a href="https://api.whatsapp.com/send?phone={{ $prod->client_phone }}" class="btn btn-sm btn-success" target="_blank">
                                 <i class="fa-brands fa-whatsapp"></i>

@@ -3,7 +3,7 @@
 @section('content')
 <div class="d-flex justify-content-between mb-3">
     <h3>Proveedores</h3>
-    <a href="{{ route('providers.create') }}" class="btn btn-success" style="background:#2A8D6C;">+ Nuevo Proveedor</a>
+    <a href="{{ route('providers.create') }}" class="btn btn-success" style="background:#2A8D6C;"><i class="fa fa-truck"></i> Nuevo Proveedor</a>
 </div>
 
 @if(session('success'))
@@ -30,10 +30,10 @@
             <td>{{ $p->address }}</td>
             <td>{{ $p->cuit }}</td>
             <td>
-                <a href="{{ route('providers.edit', $p) }}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="{{ route('providers.edit', $p) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
                 <form action="{{ route('providers.destroy', $p) }}" method="POST" class="d-inline">
                     @csrf @method('DELETE')
-                    <button class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar proveedor?')">Eliminar</button>
+                    <button class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar proveedor?')"><i class="fa fa-trash"></i></button>
                 </form>
             </td>
         </tr>

@@ -3,7 +3,7 @@
 @section('content')
 <div class="d-flex justify-content-between mb-3">
     <h3>Ventas</h3>
-    <a href="{{ route('sales.create') }}" class="btn btn-success" style="background:#2A8D6C;">+ Nueva Venta</a>
+    <a href="{{ route('sales.create') }}" class="btn btn-success" style="background:#2A8D6C;"><i class="fa fa-shopping-cart"></i> Nueva Venta</a>
 </div>
 
 @if(session('success'))
@@ -28,11 +28,11 @@
             <td>{{ $s->date->format('d/m/Y') }}</td>
             <td>${{ number_format($s->total,2) }}</td>
             <td>
-                <a href="{{ route('sales.show', $s) }}" class="btn btn-info btn-sm">Ver</a>
+                <a href="{{ route('sales.show', $s) }}" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>
                 <form action="{{ route('sales.destroy', $s) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar esta venta?')">Eliminar</button>
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar esta venta?')"><i class="fa fa-trash"></i></button>
                 </form>
             </td>
         </tr>

@@ -3,7 +3,7 @@
 @section('content')
 <div class="d-flex justify-content-between mb-3">
     <h3>Listas de Precios</h3>
-    <a href="{{ route('costs.create') }}" class="btn btn-success" style="background:#2A8D6C;">+ Nueva Lista</a>
+    <a href="{{ route('costs.create') }}" class="btn btn-success" style="background:#2A8D6C;"><i class="fa fa-tag"></i> Nueva Lista</a>
 </div>
 
 @if(session('success'))
@@ -26,10 +26,10 @@
             <td>{{ $c->filename }}</td>
             <td>{{ $c->created_at->format('d/m/Y') }}</td>
             <td>
-                <a href="{{ route('costs.download', $c) }}" class="btn btn-sm btn-primary">Descargar</a>
+                <a href="{{ route('costs.download', $c) }}" class="btn btn-sm btn-primary"><i class="fa fa-download"></i></a>
                 <form action="{{ route('costs.destroy', $c) }}" method="POST" class="d-inline">
                     @csrf @method('DELETE')
-                    <button class="btn btn-sm btn-danger">Eliminar</button>
+                    <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                 </form>
             </td>
         </tr>

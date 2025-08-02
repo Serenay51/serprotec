@@ -4,7 +4,7 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h3>Clientes</h3>
     <div>
-        <a href="{{ route('clients.create') }}" class="btn btn-success" style="background:#2A8D6C;">+ Nuevo Cliente</a>
+        <a href="{{ route('clients.create') }}" class="btn btn-success" style="background:#2A8D6C;"><i class="fa fa-user-plus"></i> Nuevo Cliente</a>
     </div>
 </div>
 
@@ -55,10 +55,10 @@
             <td>{{ $client->phone }}</td>
             <td>{{ $client->cuit }}</td>
             <td>
-                <a href="{{ route('clients.edit', $client) }}" class="btn btn-sm btn-primary">Editar</a>
+                <a href="{{ route('clients.edit', $client) }}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
                 <form action="{{ route('clients.destroy', $client) }}" method="POST" class="d-inline">
                     @csrf @method('DELETE')
-                    <button class="btn btn-sm btn-danger">Eliminar</button>
+                    <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                 </form>
                 <a href="https://api.whatsapp.com/send?phone={{ $client->phone }}" class="btn btn-sm btn-success" target="_blank">
                     <i class="fa-brands fa-whatsapp"></i>

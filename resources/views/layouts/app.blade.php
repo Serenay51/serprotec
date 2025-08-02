@@ -48,13 +48,13 @@
     <div class="d-flex">
         <!-- Sidebar -->
         <div class="sidebar position-fixed">
-            <a class="mt-5" href="{{ route('dashboard') }}">Home</a>
-            <a href="{{ route('products.index') }}">Productos</a>
-            <a href="{{ route('clients.index') }}">Clientes</a>
-            <a href="{{ route('providers.index') }}">Proveedores</a>
-            <a href="{{ route('quotations.index') }}">Presupuestos</a>
-            <a href="{{ route('sales.index') }}">Ventas</a>
-            <a href="{{ route('costs.index') }}">Listas de Precios</a>
+            <a class="mt-5" href="{{ route('dashboard') }}"><i class="fa fa-home"></i>  Home</a>
+            <a href="{{ route('products.index') }}"><i class="fa fa-box"></i>  Productos</a>
+            <a href="{{ route('clients.index') }}"><i class="fa fa-users"></i>  Clientes</a>
+            <a href="{{ route('providers.index') }}"><i class="fa fa-truck"></i>  Proveedores</a>
+            <a href="{{ route('quotations.index') }}"><i class="fa fa-file-invoice"></i>  Presupuestos</a>
+            <a href="{{ route('sales.index') }}"><i class="fa fa-shopping-cart"></i>  Ventas</a>
+            <a href="{{ route('costs.index') }}"><i class="fa fa-tags"></i>  Listas de Precios</a>
         </div>
 
         <!-- Contenido -->
@@ -64,10 +64,10 @@
                 <div class="container-fluid d-flex justify-content-between">
                     <img src="/images/logo.png" alt="Logo" width="120">
                     <div>
-                        <span class="me-3">{{ auth()->user()->name }}</span>
+                        <span class="me-3"><i class="fa fa-user"></i> {{ auth()->user()->name }}</span>
                         <form action="{{ route('logout') }}" method="POST" class="d-inline">
                             @csrf
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Cerrar sesión</button>
+                            <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</button>
                         </form>
                     </div>
                 </div>
