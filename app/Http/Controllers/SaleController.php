@@ -12,9 +12,29 @@ use Carbon\Carbon;
 
 class SaleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $sales = Sale::with('client')->latest()->paginate(10);
+        $query = Sale::with('client');
+
+        // Filtro por búsqueda: número de venta o nombre de cliente
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('number', 'like', "%{$search}%")
+                ->orWhereHas('client', function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                });
+        }
+
+        // Filtro por rango de fechas
+        if ($request->filled('date_from')) {
+            $query->whereDate('date', '>=', $request->input('date_from'));
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('date', '<=', $request->input('date_to'));
+        }
+
+        $sales = $query->latest()->paginate(10)->withQueryString();
+
         return view('sales.index', compact('sales'));
     }
 

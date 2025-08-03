@@ -11,11 +11,33 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class QuotationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $quotations = Quotation::with('client')->latest()->paginate(10);
+        $query = Quotation::with('client');
+
+        // Buscar por nombre cliente o número de presupuesto (quotation)
+        if ($search = $request->get('search')) {
+            $query->where(function($q) use ($search) {
+                $q->whereHas('client', function($q2) use ($search) {
+                    $q2->where('name', 'LIKE', "%{$search}%");
+                })
+                ->orWhere('number', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Filtrar por rango de fechas
+        if ($dateFrom = $request->get('date_from')) {
+            $query->whereDate('date', '>=', $dateFrom);
+        }
+        if ($dateTo = $request->get('date_to')) {
+            $query->whereDate('date', '<=', $dateTo);
+        }
+
+        $quotations = $query->orderBy('date', 'desc')->paginate(10);
+
         return view('quotations.index', compact('quotations'));
     }
+
 
     public function create()
     {

@@ -35,6 +35,23 @@
 </script>
 @endif
 
+<!-- Barra de búsqueda Clientes -->
+<form method="GET" action="{{ route('clients.index') }}" class="mb-4">
+    <div class="input-group">
+        <input
+            type="text"
+            name="search"
+            value="{{ request('search') }}"
+            class="form-control"
+            placeholder="Buscar por nombre o CUIT..."
+            autocomplete="off"
+        />
+        <button class="btn btn-primary" type="submit">
+            <i class="fa fa-search"></i> Buscar
+        </button>
+    </div>
+</form>
+
 <table class="table table-bordered bg-white shadow-sm">
     <thead class="table-light text-center">
         <tr>
@@ -72,7 +89,7 @@
     </tbody>
 </table>
 
-{{ $clients->links() }}
+{{ $clients->appends(request()->except('page'))->links() }}
 
 <!-- Modal WhatsApp -->
 <div class="modal fade" id="whatsappModal" tabindex="-1" aria-labelledby="whatsappModalLabel" aria-hidden="true">

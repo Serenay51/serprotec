@@ -7,9 +7,16 @@ use Illuminate\Http\Request;
 
 class ProviderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $providers = Provider::latest()->paginate(10);
+        $query = Provider::query();
+
+        if ($search = $request->get('search')) {
+            $query->where('name', 'LIKE', "%{$search}%");
+        }
+
+        $providers = $query->orderBy('id', 'asc')->paginate(10);
+
         return view('providers.index', compact('providers'));
     }
 

@@ -9,10 +9,20 @@ use App\Imports\ClientsImport;
 
 class ClientController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $clients = Client::latest()->paginate(10);
-        return view('clients.index', compact('clients'));
+        $query = Client::query();
+
+            if ($search = $request->get('search')) {
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('cuit', 'LIKE', "%{$search}%");
+                });
+            }
+
+            $clients = $query->orderBy('id', 'asc')->paginate(10);
+
+            return view('clients.index', compact('clients'));
     }
 
     public function create()
@@ -71,16 +81,18 @@ class ClientController extends Controller
             $import = new ClientsImport();
             $file = $request->file('file');
 
-            // Validar encabezados antes de importar
-            $headings = Excel::toArray($import, $file)[0][0] ?? [];
-            $import->validateHeaders(array_keys($headings));
+            // Leer archivo para obtener encabezados
+            $rows = Excel::toArray($import, $file);
+            $headings = array_keys($rows[0][0] ?? []);
 
-            // Importar archivo
+            // Validar encabezados
+            $import->validateHeaders($headings);
+
+            // Importar
             Excel::import($import, $file);
 
             return redirect()->route('clients.index')->with('success', 'Clientes importados correctamente.');
         } catch (\Exception $e) {
-            // Si hubo error (columnas faltantes o datos vacíos), redirigir con mensaje de error
             return redirect()->route('clients.index')->with('import_error', $e->getMessage());
         }
     }

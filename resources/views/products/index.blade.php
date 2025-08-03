@@ -35,6 +35,26 @@
 </script>
 @endif
 
+<!-- Barra de búsqueda -->
+<form method="GET" action="{{ route('products.index') }}" class="mb-4">
+    <div class="input-group">
+        <input
+            type="text"
+            name="search"
+            value="{{ request('search') }}"
+            class="form-control"
+            placeholder="Buscar por nombre, ID o categoría..."
+            autocomplete="off"
+        />
+        <button class="btn btn-primary" type="submit">
+            <i class="fa fa-search"></i> Buscar
+        </button>
+    </div>
+    <small class="text-muted">
+        Categorías: Extintores, Cartelería, Indumentaria, Equipos, Herramientas, Otros
+    </small>
+</form>
+
 <table class="table table-bordered bg-white shadow-sm">
     <thead class="table-light text-center">
         <tr>

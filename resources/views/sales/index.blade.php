@@ -10,6 +10,56 @@
 <div class="alert alert-success">{{ session('success') }}</div>
 @endif
 
+<form method="GET" action="{{ route('sales.index') }}" class="mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+            <label for="search" class="form-label">Cliente o Número</label>
+            <input
+                type="text"
+                name="search"
+                id="search"
+                value="{{ request('search') }}"
+                class="form-control"
+                placeholder="Buscar por cliente o número"
+                autocomplete="off"
+            />
+        </div>
+
+        <div class="col-md-3">
+            <label for="date_from" class="form-label">Fecha desde</label>
+            <input
+                type="date"
+                name="date_from"
+                id="date_from"
+                value="{{ request('date_from') }}"
+                class="form-control"
+            />
+        </div>
+
+        <div class="col-md-3">
+            <label for="date_to" class="form-label">Fecha hasta</label>
+            <input
+                type="date"
+                name="date_to"
+                id="date_to"
+                value="{{ request('date_to') }}"
+                class="form-control"
+            />
+        </div>
+
+        <div class="col-md-2 d-flex gap-2">
+            <button class="btn btn-primary w-100" type="submit">
+                <i class="fa fa-search"></i> Buscar
+            </button>
+
+            <a href="{{ route('sales.index') }}" class="btn btn-secondary w-100">
+                <i class="fa fa-undo"></i> Resetear
+            </a>
+        </div>
+    </div>
+</form>
+
+
 <table class="table table-bordered bg-white shadow-sm">
     <thead class="table-light text-center align-middle fw-bold">
         <tr>

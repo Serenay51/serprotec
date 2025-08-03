@@ -63,11 +63,15 @@ class DashboardController extends Controller
                 }
 
                 // Filtrar vencimientos del mes actual
+                // Calcular días restantes (positivo futuro, 0 hoy, negativo pasado)
+                $daysLeft = $today->diffInDays($vencimiento, false);
+
+                // Incluir TODOS los vencimientos del mes actual (vencidos y futuros)
                 if ($vencimiento && $vencimiento->month == $today->month && $vencimiento->year == $today->year) {
                     $vencimientos->push((object) [
                         'name' => $product->name,
                         'category' => $product->category,
-                        'days_left' => $vencimiento->diffInDays($today, false),
+                        'days_left' => $daysLeft,
                         'vencimiento' => $vencimiento,
                         'sale_number' => $sale->number,
                         'sale_id' => $sale->id,

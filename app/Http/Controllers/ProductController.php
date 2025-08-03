@@ -6,12 +6,23 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::latest()->paginate(10);
+        $query = Product::query();
+
+        if ($search = $request->get('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('id', $search)
+                  ->orWhere('category', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $products = $query->orderBy('id', 'asc')->paginate(10);
         return view('products.index', compact('products'));
     }
 
@@ -28,7 +39,13 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'stock' => 'required|integer',
             'category' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+
+        // Guardar imagen si existe
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
 
         Product::create($data);
 
@@ -48,7 +65,16 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'stock' => 'required|integer',
             'category' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+
+        // Si se sube una nueva imagen, eliminamos la anterior y guardamos la nueva
+        if ($request->hasFile('image')) {
+            if ($product->image && Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
 
         $product->update($data);
 
@@ -57,6 +83,11 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        // Si el producto tiene imagen, eliminarla al borrar el producto
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
+        }
+
         $product->delete();
         return redirect()->route('products.index')->with('success', 'Producto eliminado correctamente.');
     }
@@ -76,18 +107,14 @@ class ProductController extends Controller
             $import = new ProductsImport();
             $file = $request->file('file');
 
-            // Validar encabezados antes de importar
-            $headings = \Maatwebsite\Excel\Facades\Excel::toArray($import, $file)[0][0] ?? [];
+            $headings = Excel::toArray($import, $file)[0][0] ?? [];
             $import->validateHeaders(array_keys($headings));
 
-            // Importar datos
-            \Maatwebsite\Excel\Facades\Excel::import($import, $file);
+            Excel::import($import, $file);
 
             return redirect()->route('products.index')->with('success', 'Productos importados correctamente.');
         } catch (\Exception $e) {
-            // Redirigir con error en sesión
             return redirect()->route('products.index')->with('import_error', $e->getMessage());
         }
     }
 }
-

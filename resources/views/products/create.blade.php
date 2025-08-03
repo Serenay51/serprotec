@@ -32,6 +32,12 @@
         <label>Stock</label>
         <input type="number" name="stock" class="form-control" required>
     </div>
+
+    <!-- NUEVO CAMPO DE IMAGEN -->
+    <div class="mb-3">
+        <label>Imagen del producto (opcional)</label>
+        <input type="file" name="image" class="form-control" accept="image/*">
+    </div>
     <button class="btn btn-success" style="background:#2A8D6C;">Guardar</button>
     <a href="{{ route('products.index') }}" class="btn btn-secondary">Volver</a>
 </form>

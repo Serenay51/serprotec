@@ -10,6 +10,23 @@
 <div class="alert alert-success">{{ session('success') }}</div>
 @endif
 
+<!-- Barra de búsqueda Proveedores -->
+<form method="GET" action="{{ route('providers.index') }}" class="mb-4">
+    <div class="input-group">
+        <input
+            type="text"
+            name="search"
+            value="{{ request('search') }}"
+            class="form-control"
+            placeholder="Buscar proveedores por nombre o email..."
+            autocomplete="off"
+        />
+        <button class="btn btn-primary" type="submit">
+            <i class="fa fa-search"></i> Buscar
+        </button>
+    </div>
+</form>
+
 <table class="table table-bordered bg-white shadow-sm">
     <thead class="table-light text-center">
         <tr>
@@ -42,5 +59,5 @@
         @endforelse
     </tbody>
 </table>
-{{ $providers->links() }}
+{{ $providers->appends(request()->except('page'))->links() }}
 @endsection

@@ -9,9 +9,19 @@ use Illuminate\Support\Facades\Storage;
 
 class CostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $costs = Cost::with('provider')->latest()->paginate(10);
+        $query = Cost::with('provider');
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->whereHas('provider', function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            });
+        }
+
+        $costs = $query->latest()->paginate(10)->withQueryString();
+
         return view('costs.index', compact('costs'));
     }
 

@@ -23,6 +23,11 @@
             <p class="fs-5"><strong>Precio:</strong> 
                 <span class="text-success fw-bold">${{ number_format($product->price, 2) }}</span>
             </p>
+            @if($product->image)
+                <img src="{{ asset('storage/' . $product->image) }}" alt="Imagen del producto" width="120">
+            @else
+                <span class="text-muted">Sin imagen</span>
+            @endif
         </div>
         <div class="card-footer d-flex justify-content-between">
             <a href="{{ route('products.edit', $product) }}" class="btn btn-warning">

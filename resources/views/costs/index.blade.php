@@ -12,6 +12,23 @@
 <div class="alert alert-success">{{ session('success') }}</div>
 @endif
 
+<form method="GET" action="{{ route('costs.index') }}" class="mb-4">
+    <div class="input-group">
+        <input
+            type="text"
+            name="search"
+            value="{{ request('search') }}"
+            class="form-control"
+            placeholder="Buscar Lista de Precio por Proveedor..."
+            autocomplete="off"
+        />
+        <button class="btn btn-primary" type="submit">
+            <i class="fa fa-search"></i> Buscar
+        </button>
+    </div>
+</form>
+
+
 <table class="table table-bordered bg-white shadow-sm">
     <thead class="table-light text-center">
         <tr>

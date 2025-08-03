@@ -339,7 +339,9 @@ document.querySelectorAll('.achievement-card').forEach(card => {
 <!-- Vencimientos del mes -->
 <div class="card shadow-sm">
     <div class="card-header bg-light">
-        <h5 class="mb-0">Vencimientos del mes</h5>
+        <h5 class="mb-0">
+            Vencimientos del mes de {{ \Carbon\Carbon::now()->locale('es')->translatedFormat('F') }}
+        </h5>
     </div>
     <div class="card-body">
         @if($vencimientosPaginated->isEmpty())
@@ -358,13 +360,16 @@ document.querySelectorAll('.achievement-card').forEach(card => {
                             <small class="text-muted">Teléfono: {{ $prod->client_phone }}</small>
                             <br>
                             <small class="text-muted">Vencimiento:</small>
-                            @if($prod->days_left == 0)
+                            @if($prod->days_left < 0)
+                                <span class="badge bg-secondary">Venció hace {{ abs($prod->days_left) }} días</span>
+                            @elseif($prod->days_left == 0)
                                 <span class="badge bg-danger">Hoy</span>
                             @elseif($prod->days_left == 1)
                                 <span class="badge bg-warning">Mañana</span>
                             @else
-                                <span class="badge bg-success">{{ $prod->vencimiento->format('d/m/Y') }}</span>
+                                <span class="badge bg-success">Se vence el {{ $prod->vencimiento->format('d/m/Y') }}</span>
                             @endif
+
                         </div>
                         <div>
                             <a href="{{ route('sales.show', $prod->sale_id) }}" class="btn btn-sm btn-primary">
