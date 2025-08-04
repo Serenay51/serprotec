@@ -71,29 +71,25 @@ class ClientController extends Controller
         return redirect()->route('clients.index')->with('success', 'Cliente eliminado correctamente.');
     }
 
-    public function import(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls'
-        ]);
 
-        try {
-            $import = new ClientsImport();
-            $file = $request->file('file');
+        public function import(Request $request)
+        {
+            $request->validate([
+                'file' => 'required|mimes:xlsx,xls'
+            ]);
 
-            // Leer archivo para obtener encabezados
-            $rows = Excel::toArray($import, $file);
-            $headings = array_keys($rows[0][0] ?? []);
+            try {
+                $import = new ClientsImport();
+                $file = $request->file('file');
 
-            // Validar encabezados
-            $import->validateHeaders($headings);
+                $headings = Excel::toArray($import, $file)[0][0] ?? [];
+                $import->validateHeaders(array_keys($headings));
 
-            // Importar
-            Excel::import($import, $file);
+                Excel::import($import, $file);
 
-            return redirect()->route('clients.index')->with('success', 'Clientes importados correctamente.');
-        } catch (\Exception $e) {
-            return redirect()->route('clients.index')->with('import_error', $e->getMessage());
+                return redirect()->route('clients.index')->with('success', 'Clientes importados correctamente.');
+            } catch (\Exception $e) {
+                return redirect()->route('clients.index')->with('import_error', $e->getMessage());
+            }
         }
-    }
 }
