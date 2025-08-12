@@ -8,10 +8,14 @@
             <h4 class="mb-0">
                 <i class="bi bi-box-seam me-2"></i> {{ $product->name }}
             </h4>
-            @if (($product->stock) < 5)
+            @if (($product->stock) < 5 && ($product->stock) > 0)
                 <span class="badge bg-danger text-white fs-6">
                     Stock Crítico: {{ $product->stock }}
                 </span>  
+            @elseif (($product->stock) === 0)
+                <span class="badge bg-dark text-white fs-6">
+                    Sin Stock
+                </span>
             @else
                 <span class="badge bg-light text-dark fs-6">
                     Stock: {{ $product->stock }}
